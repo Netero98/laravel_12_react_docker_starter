@@ -1,0 +1,49 @@
+services:
+  web:
+    image: registry.netero.ru/application-nginx:latest
+    restart: unless-stopped
+    networks:
+      - laravel-production
+    depends_on:
+      php-fpm:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost/health || exit 1" ]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+
+  php-fpm:
+    image: registry.netero.ru/application-php-fpm:latest
+    restart: unless-stopped
+    networks:
+      - laravel-production
+    healthcheck:
+      test: ["CMD-SHELL", "php-fpm-healthcheck || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    environment:
+      - APP_DEBUG
+      - APP_ENV
+      - APP_KEY
+      - APP_NAME
+      - APP_URL
+      - CACHE_STORE
+      - DB_CONNECTION
+      - DB_DATABASE
+      - DB_HOST
+      - DB_PASSWORD
+      - DB_PORT
+      - DB_USERNAME
+      - DEEPSEEK_API_KEY
+      - DEEPSEEK_MODEL
+      - EXCHANGE_RATE_API_KEY
+      - LOG_STACK
+      - MEXC_API_KEY
+      - MEXC_API_SECRET
+      - QUEUE_CONNECTION
+      - SENTRY_LARAVEL_DSN
+      - SESSION_DRIVER
+networks:
+  laravel-production:
