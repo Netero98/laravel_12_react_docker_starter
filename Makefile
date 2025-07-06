@@ -108,3 +108,10 @@ build-and-push-prod-images:
 
 	docker --debug push ${REGISTRY}/application-php-fpm:latest
 
+	docker build --pull --no-cache \
+		--file=docker/production/php-cli/Dockerfile \
+		--target=php-cli-prod \
+		--tag=${REGISTRY}/application-php-cli:latest \
+		.
+
+	docker --debug push ${REGISTRY}/application-php-cli:latest
